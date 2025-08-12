@@ -46,13 +46,27 @@ static void write_3d_vecs_int(FILE *fp, int num, int vec[][4]) {
  * 而 HopTB 的 t[jj,ii] 期望 (行=邻居轨道, 列=中心轨道)，等价于做一次转置：
  *   t(jj,ii) = OLP[ct][h][ii][jj]
  */
-static void dump_block_matrix(FILE *fp,
-                              int tno_center, int tno_neigh,
-                              double ****MAT, int ct_AN, int h_AN)
+/* 写 4* 指针的一个块（用于 r 矩阵） */
+static void dump_block_matrix4(FILE *fp,
+                               int tno_center, int tno_neigh,
+                               double ****M, int ct_AN, int h_AN)
 {
-  for (int ii=0; ii<tno_center; ++ii) {      /* 列：中心原子轨道 */
-    for (int jj=0; jj<tno_neigh;  ++jj) {    /* 行：邻居原子轨道 */
-      double v = MAT[ct_AN][h_AN][ii][jj];   /* 转置写法 */
+  for (int ii=0; ii<tno_center; ++ii) {       /* 列：中心原子轨道 */
+    for (int jj=0; jj<tno_neigh;  ++jj) {     /* 行：邻居原子轨道 */
+      double v = M[ct_AN][h_AN][ii][jj];      /* 如需转置，这里改成 [jj][ii] */
+      fwrite(&v, sizeof(double), 1, fp);
+    }
+  }
+}
+
+/* 写 5* 指针的一个块（用于 S，带自旋通道） */
+static void dump_block_matrix5(FILE *fp,
+                               int tno_center, int tno_neigh,
+                               double *****M, int spin, int ct_AN, int h_AN)
+{
+  for (int ii=0; ii<tno_center; ++ii) {       /* 列：中心原子轨道 */
+    for (int jj=0; jj<tno_neigh;  ++jj) {     /* 行：邻居原子轨道 */
+      double v = M[spin][ct_AN][h_AN][ii][jj];
       fwrite(&v, sizeof(double), 1, fp);
     }
   }
@@ -167,7 +181,7 @@ fwrite(hdr, sizeof(int), 7, fp);
   for (int i=1;i<=atomnum;++i) {
     int len = FNAN[i] + 1;
     int *buf = (int*)malloc(sizeof(int)*len);
-    for (int h=0; h<len; ++h) buf[h] = ncn[i][h];   /* 如果内存是 1-based 索引，需要 -1 */
+    for (int h=0; h<len; ++h) buf[h] = ncn[i][h] -1;   /* 如果内存是 1-based 索引，需要 -1 */
     /* 若确认 ncn[i][h] 是 1..TCpyCell，则用： buf[h] = ncn[i][h] - 1; */
     fwrite(buf, sizeof(int), len, fp);
     free(buf);
@@ -190,16 +204,19 @@ fwrite(hdr, sizeof(int), 7, fp);
     free(buf);
   }
 
-  /* ---------- 5) OLP：1 个 spin 通道（实数） ---------- */
-  for (int i=1;i<=atomnum;++i) {
-    int len = FNAN[i] + 1;        /* 含 self 的条数 */
-    for (int h=0; h<len; ++h) {
-      int B = natn[i][h];
-      int tno_center = TNO[i];
-      int tno_neigh  = TNO[B];
-      dump_block_matrix(fp, tno_center, tno_neigh, OLP_arr, i, h);
+  /* ---------- 5) OLP：支持 0/1/NC 自旋 ---------- */
+  for (int spin=0; spin<=SpinP_switch; ++spin) {
+    for (int i=1;i<=atomnum;++i) {
+      int len = FNAN[i] + 1;                    /* 含 self */
+      for (int h=0; h<len; ++h) {
+        int B = natn[i][h];
+        int tno_center = TNO[i];
+        int tno_neigh  = TNO[B];
+        dump_block_matrix5(fp, tno_center, tno_neigh, OLP_arr, spin, i, h);
+      }
     }
   }
+
 
   /* ---------- 6) OLP_r：3 个方向（order_max=1） ---------- */
   for (int dir=0; dir<3; ++dir) {

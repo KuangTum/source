@@ -660,22 +660,27 @@ int main(int argc, char *argv[])
       if (MD_iter==1) {
         if (myid==Host_ID) printf("[OLPR] enter early-exit\n");
 
-        /* Build S into global OLP (spin-packed, i.e., double*****) */
-        Set_OLP_p();
+        /* 1) 生成 S */
+        extern double *****OLP;
+        extern double *****H0;
+        Set_OLP_Kin(OLP, H0);
 
-        /* Build <r> into OLPpox/poy/poz */
+        /* 2) 生成 <r> */
+        extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
         Calc_OLP_r(1, myid);
 
-        /* Dump S and r, then exit */
+        /* 3) 只写 S 和 r */
         Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout", OLP, OLPpox, OLPpoy, OLPpoz);
 
         if (myid==Host_ID) printf("[OLPR] dump done, exiting\n");
-    #ifdef MPI
+      #ifdef MPI
         MPI_Finalize();
-    #endif
+      #endif
         exit(0);
       }
     #endif
+
+
 
 
         
