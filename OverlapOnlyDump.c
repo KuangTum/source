@@ -205,6 +205,7 @@ fwrite(hdr, sizeof(int), 7, fp);
       buf[a-1][3] = Gxyz[3][a];
     }
     write_3d_vecs_double(fp, atomnum, buf);
+    free(buf);
     free(buf_flat);
   }
 
