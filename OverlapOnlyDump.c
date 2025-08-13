@@ -22,7 +22,7 @@ extern int *Spe_Total_CNO;   /* 1..SpeciesNum → 该物种 AO 数 */
  */
 
 /* ------- 写工具：按 HopTB 解析器要求的“4 元组打包”写 3D 向量 ------- */
-static void write_3d_vecs_double(FILE *fp, int num, double vec[][4]) {
+static void write_3d_vecs_double(FILE *fp, int num, double **vec) {
   /* HopTB 读法是 reshape(multiread(T,4*num),4,num)[2:4,:]
      也就是说每个向量写 4 个 double，第一个值会被丢弃。这里写 0 + (x,y,z)。 */
   for (int k=0; k<num; ++k) {
@@ -31,7 +31,7 @@ static void write_3d_vecs_double(FILE *fp, int num, double vec[][4]) {
   }
 }
 
-static void write_3d_vecs_int(FILE *fp, int num, int vec[][4]) {
+static void write_3d_vecs_int(FILE *fp, int num, int **vec) {
   for (int k=0; k<num; ++k) {
     int pack[4] = {0, vec[k][1], vec[k][2], vec[k][3]};
     fwrite(pack, sizeof(int), 4, fp);
@@ -188,12 +188,16 @@ fwrite(hdr, sizeof(int), 7, fp);
   }
 
   /* ---------- 4) tv, rtv, Gxyz （均以 Bohr 写出） ---------- */
-  write_3d_vecs_double(fp, 3, &tv[1]);
-  write_3d_vecs_double(fp, 3, &rtv[1]);
+  double *tv_ptr[3]  = { tv[1],  tv[2],  tv[3] };
+  double *rtv_ptr[3] = { rtv[1], rtv[2], rtv[3] };
+  write_3d_vecs_double(fp, 3, tv_ptr);
+  write_3d_vecs_double(fp, 3, rtv_ptr);
   /* Gxyz: 原子笛卡尔坐标（Bohr）。OpenMX 的 Gxyz 通常为 Gxyz[1..3][1..atomnum] */
   {
     /* 组装成 [atom][4] */
-    double (*buf)[4] = malloc(sizeof(double)*(atomnum)*4);
+    double *buf_flat = malloc(sizeof(double)*atomnum*4);
+    double **buf = malloc(sizeof(double*)*atomnum);
+    for (int a=0; a<atomnum; ++a) buf[a] = buf_flat + 4*a;
     for (int a=1; a<=atomnum; ++a) {
       buf[a-1][0] = 0.0;
       buf[a-1][1] = Gxyz[1][a];
@@ -201,7 +205,7 @@ fwrite(hdr, sizeof(int), 7, fp);
       buf[a-1][3] = Gxyz[3][a];
     }
     write_3d_vecs_double(fp, atomnum, buf);
-    free(buf);
+    free(buf_flat);
   }
 
   /* ---------- 5) OLP：支持 0/1/NC 自旋 ---------- */
