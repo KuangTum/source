@@ -81,7 +81,8 @@ static void dump_block_matrix_r(FILE *fp,
   double ****ARR = (dir==0?RX:(dir==1?RY:RZ));
   for (int ii=0; ii<tno_center; ++ii) {
     for (int jj=0; jj<tno_neigh;  ++jj) {
-      double v = ARR[ct_AN][h_AN][ii][jj];
+      /* rows = neighbour, columns = centre (Julia reader expectation) */
+      double v = ARR[ct_AN][h_AN][jj][ii];
       fwrite(&v, sizeof(double), 1, fp);
     }
   }
