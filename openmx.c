@@ -667,10 +667,15 @@ int main(int argc, char *argv[])
 
         /* 2) 生成 <r> */
         extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
+        extern double ****OLPpox_all, ****OLPpoy_all, ****OLPpoz_all;
         Calc_OLP_r(1, myid);
 
         /* 3) 只写 S 和 r */
-        Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout", OLP, OLPpox, OLPpoy, OLPpoz);
+        Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout",
+                                OLP,
+                                OLPpox_all,
+                                OLPpoy_all,
+                                OLPpoz_all);
 
         if (myid==Host_ID) printf("[OLPR] dump done, exiting\n");
       #ifdef MPI
