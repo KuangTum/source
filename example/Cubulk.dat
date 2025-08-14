@@ -1,0 +1,91 @@
+System.Name                      openmx
+DATA.PATH                         /projects/sipv/xkuang/softwares/Openmx/openmx3.9/DFT_DATA19
+HS.fileout                        on
+
+#DATA.PATH /home/ytl/openmx/openmx3.8/DFT_DATA13
+#DATA.PATH /home/ytlee/OpenMX/DFT_DATA13
+
+Species.Number       1
+#11 valence
+<Definition.of.Atomic.Species
+ Cu Cu6.0S-s3p2d1 Cu_PBE19S
+Definition.of.Atomic.Species>
+
+# Definition of Atomic Species
+#
+
+
+#PBE13S or doesn't work
+#
+# Atoms
+#
+
+Atoms.Number   1 
+Atoms.SpeciesAndCoordinates.Unit   FRAC  # Ang|AU
+<Atoms.SpeciesAndCoordinates
+1 Cu 0.0000 0.0000 0.0000 5.5 5.5 0 0 0 0 0 off
+Atoms.SpeciesAndCoordinates>
+
+Atoms.UnitVectors.Unit             Ang # Ang|AU
+<Atoms.UnitVectors
+0.000000 1.807500 1.807500
+1.807500 0.000000 1.807500
+1.807500 1.807500 0.000000
+Atoms.UnitVectors>
+
+# SCF or Electronic System
+#
+
+scf.XcType                 GGA-PBE     # LDA|LSDA-CA|LSDA-PW
+scf.SpinPolarization        off         # On|Off|NC
+scf.SpinOrbit.Coupling      off  
+scf.ElectronicTemperature  300.0       # default=300 (K)
+#scf.energycutoff           600.0       # default=150 (Ry)
+scf.Ngrid                 32 32 32 
+scf.maxIter                 1        # default=40
+scf.EigenvalueSolver      band         # Recursion|Cluster|Band
+scf.Kgrid                 1 1 1     # means n1 x n2 x n3
+scf.Mixing.Type             rmm-diisk   # Simple|Rmm-Diis|Gr-Pulay
+scf.Init.Mixing.Weight     0.020       # default=0.30 
+scf.Min.Mixing.Weight      0.001       # default=0.001 
+scf.Max.Mixing.Weight      0.400       # default=0.40 
+scf.Mixing.History         30          # default=5
+scf.Mixing.StartPulay      10          # default=6
+scf.criterion             1.0e-8       # default=1.0e-6 (Hartree) 
+
+scf.restart   off 
+
+#
+# MD or Geometry Optimization
+#
+
+MD.Type                     nomd       # Nomd|Opt|DIIS|NVE|NVT_VS|NVT_NH
+MD.maxIter                    1        # default=1
+MD.TimeStep                   1        # default=0.5 (fs)
+MD.Opt.criterion         1.0e-4        # default=1.0e-4 (Hartree/bohr)
+
+
+Band.dispersion              off       # on|off, default=off
+#<Band.KPath.UnitCell     
+#2.87  0.00  0.00
+#0.00  2.87  0.00
+#0.00  0.00  2.87
+#Band.KPath.UnitCell>      
+# if <Band.KPath.UnitCell does not exist,
+#     the reciprical lattice vector is employed.
+#Band.Nkpath               1
+#<Band.kpath
+#2 0.32 0.17 0.18  0.32431589498166035320 0.16568410501833964680 0.18431589498166035320 A B
+#Band.kpath>
+
+
+#30 0 0 0 0.5 0.5 0  A B
+#30 0.5 0.5 0 0.5 0.5 0.5 A B
+#30 0.5 0.5 0.5 1 0.5 0.5 A B
+#30 1 0.5 0.5 0 0 0 A B
+#30 0 0 0 0 0.5 0.5 A B
+#30 0 0.5 0.5 0.5 1 0.5 A B
+#30 0.5 1 0.5 0 0 0 A B
+#30 0 0 0 0.5 0.5 0.5 A B
+#30 0.5 0.5 0.5 0.5 1 0.5 A B
+
