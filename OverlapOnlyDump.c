@@ -182,7 +182,7 @@ fwrite(hdr, sizeof(int), 7, fp);
   for (int i=1;i<=atomnum;++i) {
     int len = FNAN[i] + 1;
     int *buf = (int*)malloc(sizeof(int)*len);
-    for (int h=0; h<len; ++h) buf[h] = ncn[i][h] -1;   /* 如果内存是 1-based 索引，需要 -1 */
+    for (int h=0; h<len; ++h) buf[h] = ncn[i][h];   /* ncn 使用 0-based 索引，直接写出 */
     /* 若确认 ncn[i][h] 是 1..TCpyCell，则用： buf[h] = ncn[i][h] - 1; */
     fwrite(buf, sizeof(int), len, fp);
     free(buf);
