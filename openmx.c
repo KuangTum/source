@@ -668,7 +668,7 @@ int main(int argc, char *argv[])
         /* 2) 生成 <r> */
         extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
         extern double ****OLPpox_all, ****OLPpoy_all, ****OLPpoz_all;
-        Set_Orbitals_Grid(0);           /* populate Orbs_Grid / Orbs_Grid_FNAN */
+        Set_Orbitals_Grid(0);           /* populate Orbs_Grid / Orbs_Grid_FNAN give*/
         Calc_OLP_r(1, myid);
 
         /* 3) 只写 S 和 r */
