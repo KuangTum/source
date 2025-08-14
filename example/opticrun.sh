@@ -25,10 +25,10 @@ echo $SLURM_NTASKS
 #cd "/kfs3/scratch/xkuang/dataset/MoS2/olp/120du_30A_5_5"
 mpirun -np $SLURM_NTASKS /projects/sipv/xkuang/softwares/ompi_openmx/openmx3.9/source/openmx Cubulk.dat > openmx_scf.std
 #mpirun -np $SLURM_NTASKS /projects/sipv/xkuang/softwares/Openmx/openmx3.9/source/openmx Cubulk.dat > originopenmx_scf.std
-# #wait
+wait
 # #bandgnu13 openmx.Band
 # #get fermi energy
-# rm -r openmx_rst
+rm -r openmx_rst
 # wait
 # grep -m1 -i "Chemical Potential (Hartree)" openmx.out | awk '{print $NF*27.211386}'
 #wait

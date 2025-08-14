@@ -76,7 +76,7 @@ function rn_index_and_triplet(atv_ijk::Matrix{Int}, c::Int)
         return (c, (atv_ijk[1,c], atv_ijk[2,c], atv_ijk[3,c]))
     elseif 0 <= c < ncols   # 0-based 情况
         cc = c+1
-        return (c, (atv_ijk[1,cc], atv_ijk[2,cc], atv_ijk[3,cc]))
+        return (cc, (atv_ijk[1,cc], atv_ijk[2,cc], atv_ijk[3,cc]))
     else
         return (c, (0,0,0))
     end
