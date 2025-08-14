@@ -69,16 +69,12 @@ end
 # 取 Rn 的“整数索引”和“(i,j,k) 三元组”
 function rn_index_and_triplet(atv_ijk::Matrix{Int}, c::Int)
     ncols = size(atv_ijk, 2)
-    # 自块通常用 -1 或 0 标；规整化索引与三元组
-    if c < 0
-        return (0, (0,0,0))
-    elseif 1 <= c <= ncols
-        return (c, (atv_ijk[1,c], atv_ijk[2,c], atv_ijk[3,c]))
-    elseif 0 <= c < ncols   # 0-based 情况
-        cc = c+1
-        return (cc, (atv_ijk[1,cc], atv_ijk[2,cc], atv_ijk[3,cc]))
-    else
+    # 在 .scfout 中 ncn 是 0-based；索引越界返回零向量
+    if c < 0 || c + 1 > ncols
         return (c, (0,0,0))
+    else
+        cc = c + 1                    # 转为 Julia 的 1-based 列号
+        return (cc, (atv_ijk[1,cc], atv_ijk[2,cc], atv_ijk[3,cc]))
     end
 end
 
