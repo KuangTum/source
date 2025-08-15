@@ -649,42 +649,45 @@ int main(int argc, char *argv[])
     if (dftD_switch==1 && version_dftD==2) DFTDvdW_init(MD_iter);   /* DFT-D2 */
     if (dftD_switch==1 && version_dftD==3) DFTD3vdW_init(MD_iter);  /* DFT-D3 */
 
+#ifdef OLPR_DUMP
+    if (MD_iter==1) {
+      if (myid==Host_ID) printf("[OLPR] enter overlap-only dump mode\n");
+
+      /* generate sparse data structures without SCF */
+      truncation(1,0);
+
+      /* 1) build overlap matrix */
+      extern double *****OLP;
+      extern double *****H0;
+      Set_OLP_Kin(OLP, H0);
+
+      /* 2) build <r> matrix elements */
+      extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
+      extern double ****OLPpox_all, ****OLPpoy_all, ****OLPpoz_all;
+      Set_Orbitals_Grid(0);
+      Calc_OLP_r(1, myid);
+
+      /* 3) dump S and <r> then exit */
+      Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout",
+                              OLP,
+                              OLPpox_all,
+                              OLPpoy_all,
+                              OLPpoz_all);
+
+      if (myid==Host_ID) printf("[OLPR] dump done, exiting\n");
+#ifdef MPI
+      MPI_Finalize();
+#endif
+      exit(0);
+    }
+#endif
+
     if (MD_switch==12)
       CompTime[myid][2] += truncation(1,1);  /* EvsLC */
     else if (MD_cellopt_flag==1)
       CompTime[myid][2] += truncation(1,1);  /* cell optimization */
-    else 
+    else
       CompTime[myid][2] += truncation(MD_iter,1);
-
-    #ifdef OLPR_DUMP
-      if (MD_iter==1) {
-        if (myid==Host_ID) printf("[OLPR] enter early-exit\n");
-
-        /* 1) 生成 S */
-        extern double *****OLP;
-        extern double *****H0;
-        Set_OLP_Kin(OLP, H0);
-
-        /* 2) 生成 <r> */
-        extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
-        extern double ****OLPpox_all, ****OLPpoy_all, ****OLPpoz_all;
-        Set_Orbitals_Grid(0);           /* populate Orbs_Grid / Orbs_Grid_FNAN give*/
-        Calc_OLP_r(1, myid);
-
-        /* 3) 只写 S 和 r */
-        Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout",
-                                OLP,
-                                OLPpox_all,
-                                OLPpoy_all,
-                                OLPpoz_all);
-
-        if (myid==Host_ID) printf("[OLPR] dump done, exiting\n");
-      #ifdef MPI
-        MPI_Finalize();
-      #endif
-        exit(0);
-      }
-    #endif
 
 
 
