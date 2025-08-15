@@ -27,7 +27,7 @@ static void Fixed_FNAN_SNAN();
 static int Set_Periodic(int CpyN, int Allocate_switch);
 static void Free_truncation(int CpyN, int TN, int Free_switch);
 static void free_arrays_truncation0();
-static void Trn_System(int MD_iter, int CpyCell, int TCpyCell);
+static void Trn_System(int MD_iter, int CpyCell, int TCpyCell, int UCell_flag);
 static void Estimate_Trn_System(int CpyCell, int TCpyCell);
 static void Check_System();
 static void Set_RMI();
@@ -241,7 +241,7 @@ double truncation(int MD_iter,int UCell_flag)
 
       if (measure_time) dtime(&stime); 
 
-      Trn_System(MD_iter,CpyCell,TCpyCell);
+      Trn_System(MD_iter,CpyCell,TCpyCell,UCell_flag);
 
       if (measure_time){
 	dtime(&etime); 
@@ -299,7 +299,7 @@ double truncation(int MD_iter,int UCell_flag)
 
     if (measure_time) dtime(&stime); 
 
-    Trn_System(MD_iter,CpyCell,TCpyCell);
+    Trn_System(MD_iter,CpyCell,TCpyCell,UCell_flag);
 
     if (measure_time){
       dtime(&etime); 
@@ -331,7 +331,7 @@ double truncation(int MD_iter,int UCell_flag)
     TCpyCell = Set_Periodic(CpyCell,0);
     Estimate_Trn_System(CpyCell,TCpyCell);
     Allocate_Arrays(3);
-    Trn_System(MD_iter,CpyCell,TCpyCell);
+    Trn_System(MD_iter,CpyCell,TCpyCell,UCell_flag);
     Set_Inf_SndRcv();
     Set_RMI();
   }
@@ -380,6 +380,38 @@ double truncation(int MD_iter,int UCell_flag)
             dtime(&etime);
             time10 += etime - stime;
         }
+    }
+    else
+    {
+        FNAN[0] = 0;
+        NumOLG = (int **)malloc(sizeof(int *) * (Matomnum + 1));
+        for (Mc_AN = 0; Mc_AN <= Matomnum; Mc_AN++) {
+            if (Mc_AN == 0) Gc_AN = 0;
+            else Gc_AN = M2G[Mc_AN];
+            NumOLG[Mc_AN] = (int *)malloc(sizeof(int) * (FNAN[Gc_AN] + 1));
+            for (h_AN = 0; h_AN <= FNAN[Gc_AN]; h_AN++) {
+                NumOLG[Mc_AN][h_AN] = 0;
+            }
+        }
+        alloc_first[5] = 0;
+
+        GListTAtoms1 = (int ***)malloc(sizeof(int **) * (Matomnum + 1));
+        GListTAtoms2 = (int ***)malloc(sizeof(int **) * (Matomnum + 1));
+        for (Mc_AN = 0; Mc_AN <= Matomnum; Mc_AN++) {
+            if (Mc_AN == 0) Gc_AN = 0;
+            else Gc_AN = M2G[Mc_AN];
+            GListTAtoms1[Mc_AN] = (int **)malloc(sizeof(int *) * (FNAN[Gc_AN] + 1));
+            GListTAtoms2[Mc_AN] = (int **)malloc(sizeof(int *) * (FNAN[Gc_AN] + 1));
+            for (h_AN = 0; h_AN <= FNAN[Gc_AN]; h_AN++) {
+                GListTAtoms1[Mc_AN][h_AN] = (int *)malloc(sizeof(int));
+                GListTAtoms2[Mc_AN][h_AN] = (int *)malloc(sizeof(int));
+                GListTAtoms1[Mc_AN][h_AN][0] = 0;
+                GListTAtoms2[Mc_AN][h_AN][0] = 0;
+            }
+        }
+        alloc_first[0] = 0;
+
+        Trn_System(MD_iter, CpyCell, TCpyCell, UCell_flag);
     }
 
   /****************************************************
@@ -3276,10 +3308,10 @@ double truncation(int MD_iter,int UCell_flag)
 
 
 
-void Trn_System(int MD_iter, int CpyCell, int TCpyCell)
+void Trn_System(int MD_iter, int CpyCell, int TCpyCell, int UCell_flag)
 {
   int i,j,k,l,m,Rn,fan,san,tan,wanA,wanB,po0;
-  int ct_AN,h_AN,m2,m3,size_RMI1,size_array;
+  int ct_AN,h_AN,m2,m3,size_RMI1,size_array,Mc_AN,Gc_AN;
   int My_TFNAN,My_TSNAN,Gh_AN,LT_switch,Nloop;
   double r,rcutA,rcutB,rcut,dx,dy,dz,rcut_max;
   double *fDis,*sDis;
@@ -3542,6 +3574,19 @@ void Trn_System(int MD_iter, int CpyCell, int TCpyCell)
       ID = G2ID[ct_AN];
       MPI_Bcast(&FNAN_DCLNO[ct_AN], 1, MPI_INT, ID, mpi_comm_level1);
       MPI_Bcast(&SNAN_DCLNO[ct_AN], 1, MPI_INT, ID, mpi_comm_level1);
+    }
+  }
+
+  if (UCell_flag==0){
+    FNAN[0] = 0;
+    for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
+      if (Mc_AN==0) Gc_AN = 0;
+      else          Gc_AN = M2G[Mc_AN];
+      for (h_AN=0; h_AN<=FNAN[Gc_AN]; h_AN++){
+        NumOLG[Mc_AN][h_AN] = 0;
+        GListTAtoms1[Mc_AN][h_AN][0] = 0;
+        GListTAtoms2[Mc_AN][h_AN][0] = 0;
+      }
     }
   }
 
