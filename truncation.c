@@ -380,6 +380,51 @@ double truncation(int MD_iter,int UCell_flag)
       time10 += etime - stime;
     }
   }
+  else{
+
+    /* minimal allocation for overlap-only calculations */
+
+    FNAN[0] = 0;
+    NumOLG = (int**)malloc(sizeof(int*)*(Matomnum+1));
+    for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
+      if (Mc_AN==0) Gc_AN = 0;
+      else          Gc_AN = M2G[Mc_AN];
+      NumOLG[Mc_AN] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
+      for (h_AN=0; h_AN<=FNAN[Gc_AN]; h_AN++){
+        NumOLG[Mc_AN][h_AN] = 1;
+      }
+    }
+
+    GListTAtoms1 = (int***)malloc(sizeof(int**)*(Matomnum+1));
+    GListTAtoms2 = (int***)malloc(sizeof(int**)*(Matomnum+1));
+    for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
+      if (Mc_AN==0) Gc_AN = 0;
+      else          Gc_AN = M2G[Mc_AN];
+      GListTAtoms1[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
+      GListTAtoms2[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
+      for (h_AN=0; h_AN<=FNAN[Gc_AN]; h_AN++){
+        GListTAtoms1[Mc_AN][h_AN] = (int*)malloc(sizeof(int));
+        GListTAtoms2[Mc_AN][h_AN] = (int*)malloc(sizeof(int));
+        GListTAtoms1[Mc_AN][h_AN][0] = 0;
+        GListTAtoms2[Mc_AN][h_AN][0] = 0;
+      }
+    }
+
+    /* allocate dummy grid lists */
+    GridListAtom = (int**)malloc(sizeof(int*)*(Matomnum+1));
+    CellListAtom = (int**)malloc(sizeof(int*)*(Matomnum+1));
+    GridListAtom[0] = (int*)malloc(sizeof(int));
+    CellListAtom[0] = (int*)malloc(sizeof(int));
+    for (Mc_AN=1; Mc_AN<=Matomnum; Mc_AN++){
+      Gc_AN = M2G[Mc_AN];
+      GridListAtom[Mc_AN] = (int*)malloc(sizeof(int)*GridN_Atom[Gc_AN]);
+      CellListAtom[Mc_AN] = (int*)malloc(sizeof(int)*GridN_Atom[Gc_AN]);
+      for (i=0; i<GridN_Atom[Gc_AN]; i++){
+        GridListAtom[Mc_AN][i] = 0;
+        CellListAtom[Mc_AN][i] = 0;
+      }
+    }
+  }
 
   /****************************************************
                   check the system type
@@ -3229,6 +3274,43 @@ double truncation(int MD_iter,int UCell_flag)
     }
   
   } /* if (UCell_flag==1) */
+  else{
+
+    /* minimal allocation of orbital grids for overlap-only mode */
+
+    size_Orbs_Grid = 0;
+    Orbs_Grid = (Type_Orbs_Grid***)malloc(sizeof(Type_Orbs_Grid**)*(Matomnum+1));
+    Orbs_Grid[0] = (Type_Orbs_Grid**)malloc(sizeof(Type_Orbs_Grid*)*1);
+    Orbs_Grid[0][0] = (Type_Orbs_Grid*)malloc(sizeof(Type_Orbs_Grid)*1);
+    for (Mc_AN=1; Mc_AN<=Matomnum; Mc_AN++){
+      Gc_AN = F_M2G[Mc_AN];
+      Cwan = WhatSpecies[Gc_AN];
+      Orbs_Grid[Mc_AN] = (Type_Orbs_Grid**)malloc(sizeof(Type_Orbs_Grid*)*GridN_Atom[Gc_AN]);
+      for (i=0; i<GridN_Atom[Gc_AN]; i++){
+        Orbs_Grid[Mc_AN][i] = (Type_Orbs_Grid*)malloc(sizeof(Type_Orbs_Grid)*Spe_Total_NO[Cwan]);
+        size_Orbs_Grid += Spe_Total_NO[Cwan];
+      }
+    }
+
+    size_Orbs_Grid_FNAN = 0;
+    Orbs_Grid_FNAN = (Type_Orbs_Grid****)malloc(sizeof(Type_Orbs_Grid***)*(Matomnum+1));
+    Orbs_Grid_FNAN[0] = (Type_Orbs_Grid***)malloc(sizeof(Type_Orbs_Grid**)*1);
+    Orbs_Grid_FNAN[0][0] = (Type_Orbs_Grid**)malloc(sizeof(Type_Orbs_Grid*)*1);
+    Orbs_Grid_FNAN[0][0][0] = (Type_Orbs_Grid*)malloc(sizeof(Type_Orbs_Grid)*1);
+    for (Mc_AN=1; Mc_AN<=Matomnum; Mc_AN++){
+      Gc_AN = M2G[Mc_AN];
+      Orbs_Grid_FNAN[Mc_AN] = (Type_Orbs_Grid***)malloc(sizeof(Type_Orbs_Grid**)*(FNAN[Gc_AN]+1));
+      for (h_AN=0; h_AN<=FNAN[Gc_AN]; h_AN++){
+        Orbs_Grid_FNAN[Mc_AN][h_AN] = (Type_Orbs_Grid**)malloc(sizeof(Type_Orbs_Grid*)*(NumOLG[Mc_AN][h_AN]+1));
+        for (i=0; i<(NumOLG[Mc_AN][h_AN]+1); i++){
+          Orbs_Grid_FNAN[Mc_AN][h_AN][i] = (Type_Orbs_Grid*)malloc(sizeof(Type_Orbs_Grid)*1);
+          size_Orbs_Grid_FNAN += 1;
+        }
+      }
+    }
+
+    alloc_first[3] = 0;
+  }
 
   /****************************************************
       Output the truncation data to filename.TRN
