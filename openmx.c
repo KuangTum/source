@@ -661,9 +661,8 @@ int main(int argc, char *argv[])
         if (myid==Host_ID) printf("[OLPR] enter early-exit\n");
 
         /* 1) 生成 S */
-        extern double *****OLP;
-        extern double *****H0;
-        Set_OLP_Kin(OLP, H0);
+        extern double *****OLP_p;
+        Set_OLP_p(OLP_p);
 
         /* 2) 生成 <r> */
         extern double ****OLPpox, ****OLPpoy, ****OLPpoz;
@@ -673,7 +672,7 @@ int main(int argc, char *argv[])
 
         /* 3) 只写 S 和 r */
         Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout",
-                                OLP,
+                                OLP_p,
                                 OLPpox_all,
                                 OLPpoy_all,
                                 OLPpoz_all);

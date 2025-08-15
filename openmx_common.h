@@ -3114,7 +3114,7 @@ double Stress(double *****H0,
 double Set_OLP_Kin(double *****OLP, double *****H0);
 double Set_Nonlocal(double *****HNL, double ******DS_NL);
 double Set_CoreHoleMatrix(double *****HCH);
-double Set_OLP_p(double *****OLP_p);
+double Set_OLP_p(double *****OLP_p);  /* overlap-only version of Set_OLP_Kin */
 
 double Set_ProExpn_VNA(double ****HVNA, double *****HVNA2, Type_DS_VNA *****DS_VNA);
 void Set_Vpot(int MD_iter,
