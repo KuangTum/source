@@ -1,0 +1,57 @@
+
+# ===============================
+# OpenMX build artifacts
+# ===============================
+
+# 编译产物（目标文件、模块文件、静态/动态库）
+*.o
+*.mod
+*.a
+*.so
+*.dll
+*.dylib
+
+# 可执行文件（OpenMX 主程序 + 工具）
+openmx
+ADenBand
+BandDispersion
+DosMain
+FermiLoop
+GridCalc
+MulPCalc
+MulPOnly
+Z2FH
+analysis_example
+bandgnu13
+bin2txt
+calB
+cube2xsf
+esp
+example_mpi_spawn
+gcube2oned
+intensity_map
+jx
+kSpin
+md2axsf
+polB
+tp
+
+# ===============================
+# Example / test run outputs
+# ===============================
+# 忽略所有 example 子目录中的运行输出
+example/*.err
+example/*.cube
+example/*.xsf
+example/*.gnu
+example/*.log
+
+# ===============================
+# Misc temporary files
+# ===============================
+*.tmp
+*.log
+*.bak
+*.swp
+.DS_Store
+

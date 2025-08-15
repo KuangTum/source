@@ -31,5 +31,5 @@ wait
 rm -r openmx_rst
 # wait
 # grep -m1 -i "Chemical Potential (Hartree)" openmx.out | awk '{print $NF*27.211386}'
-#wait
-#mpirun -np 1 analysis_example openmx_olpr.scfout > originHS.out
+wait
+julia print_like_openmx.jl ./openmx_olpr.scfout --S --rx --ry --rz > olp_opmx.out
