@@ -355,28 +355,30 @@ double truncation(int MD_iter,int UCell_flag)
 
     NumOLG
   ****************************************************/
+  if (UCell_flag==1){
 
-  if (measure_time) dtime(&stime); 
+    if (measure_time) dtime(&stime);
 
-  FNAN[0] = 0;
-  NumOLG = (int**)malloc(sizeof(int*)*(Matomnum+1));
-  size_NumOLG = 0;
-  for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
-    if (Mc_AN==0) Gc_AN = 0;
-    else          Gc_AN = M2G[Mc_AN];
-    NumOLG[Mc_AN] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
-    size_NumOLG += FNAN[Gc_AN] + 1;
-  }
-  alloc_first[5] = 0;
-  
-  /* PrintMemory */
+    FNAN[0] = 0;
+    NumOLG = (int**)malloc(sizeof(int*)*(Matomnum+1));
+    size_NumOLG = 0;
+    for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
+      if (Mc_AN==0) Gc_AN = 0;
+      else          Gc_AN = M2G[Mc_AN];
+      NumOLG[Mc_AN] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
+      size_NumOLG += FNAN[Gc_AN] + 1;
+    }
+    alloc_first[5] = 0;
 
-  if (firsttime)
-  PrintMemory("truncation: NumOLG", sizeof(int)*size_NumOLG, NULL);
+    /* PrintMemory */
 
-  if (measure_time){
-    dtime(&etime); 
-    time10 += etime - stime;
+    if (firsttime)
+      PrintMemory("truncation: NumOLG", sizeof(int)*size_NumOLG, NULL);
+
+    if (measure_time){
+      dtime(&etime);
+      time10 += etime - stime;
+    }
   }
 
   /****************************************************
