@@ -37,6 +37,7 @@ static void Set_Inf_SndRcv();
 static void Construct_MPI_Data_Structure_Grid();
 static void Construct_ONAN();
 static void Set_up_for_DCLNO();
+static void Set_Inf_SndRcv_OLP();
 
 int TFNAN,TFNAN2,TSNAN,TSNAN2;
 
@@ -306,23 +307,26 @@ double truncation(int MD_iter,int UCell_flag)
       time5 += etime - stime;
     }
 
-    if (measure_time) dtime(&stime); 
+      if (UCell_flag==1){
 
-    Set_Inf_SndRcv();
+        if (measure_time) dtime(&stime);
+        Set_Inf_SndRcv();
+        if (measure_time){
+          dtime(&etime);
+          time8 += etime - stime;
+        }
 
-    if (measure_time){
-      dtime(&etime); 
-      time8 += etime - stime;
-    }
-
-    if (measure_time) dtime(&stime); 
-
-    Set_RMI();
-
-    if (measure_time){
-      dtime(&etime); 
-      time9 += etime - stime;
-    }
+        if (measure_time) dtime(&stime);
+        Set_RMI();
+        if (measure_time){
+          dtime(&etime);
+          time9 += etime - stime;
+        }
+      }
+      else{
+        /* minimal MPI mappings for overlap-only mode */
+        Set_Inf_SndRcv_OLP();
+      }
 
   } /* if (MD_iter==1) */ 
 
@@ -331,9 +335,14 @@ double truncation(int MD_iter,int UCell_flag)
     TCpyCell = Set_Periodic(CpyCell,0);
     Estimate_Trn_System(CpyCell,TCpyCell);
     Allocate_Arrays(3);
-    Trn_System(MD_iter,CpyCell,TCpyCell);
-    Set_Inf_SndRcv();
-    Set_RMI();
+      Trn_System(MD_iter,CpyCell,TCpyCell);
+      if (UCell_flag==1){
+        Set_Inf_SndRcv();
+        Set_RMI();
+      }
+      else{
+        Set_Inf_SndRcv_OLP();
+      }
   }
 
   if (2<=level_stdout){
@@ -11326,4 +11335,77 @@ void Set_up_for_DCLNO()
     alloc_first[35] = 0;
   }
 
+}
+
+void Set_Inf_SndRcv_OLP()
+{
+  int Mc_AN,Gc_AN,i,j,ID;
+  int numprocs,myid;
+
+  MPI_Comm_size(mpi_comm_level1,&numprocs);
+  MPI_Comm_rank(mpi_comm_level1,&myid);
+
+  for (ID=0; ID<numprocs; ID++){
+    F_Snd_Num[ID] = 0;
+    F_Rcv_Num[ID] = 0;
+    S_Snd_Num[ID] = 0;
+    S_Rcv_Num[ID] = 0;
+  }
+
+  Rcv_GAN = (int**)malloc(sizeof(int*)*numprocs);
+  Snd_MAN = (int**)malloc(sizeof(int*)*numprocs);
+  Snd_GAN = (int**)malloc(sizeof(int*)*numprocs);
+  for (ID=0; ID<numprocs; ID++){
+    Rcv_GAN[ID] = (int*)malloc(sizeof(int));
+    Rcv_GAN[ID][0] = 0;
+    Snd_MAN[ID] = (int*)malloc(sizeof(int));
+    Snd_GAN[ID] = (int*)malloc(sizeof(int));
+    Snd_MAN[ID][0] = 0;
+    Snd_GAN[ID][0] = 0;
+  }
+  alloc_first[11] = 0;
+  alloc_first[12] = 0;
+
+  F_TopMAN = (int*)malloc(sizeof(int)*numprocs);
+  S_TopMAN = (int*)malloc(sizeof(int)*numprocs);
+  for (ID=0; ID<numprocs; ID++){
+    F_TopMAN[ID] = 0;
+    S_TopMAN[ID] = 0;
+  }
+
+  MatomnumF = 0;
+  MatomnumS = 0;
+
+  F_M2G = (int*)malloc(sizeof(int)*(Matomnum+1));
+  S_M2G = (int*)malloc(sizeof(int)*(Matomnum+1));
+  for (i=0; i<=Matomnum; i++){
+    F_M2G[i] = 0;
+    S_M2G[i] = 0;
+  }
+
+  F_G2M = (int*)malloc(sizeof(int)*(atomnum+1));
+  S_G2M = (int*)malloc(sizeof(int)*(atomnum+1));
+  for (i=0; i<=atomnum; i++){
+    F_G2M[i] = 0;
+    S_G2M[i] = 0;
+  }
+  alloc_first[13] = 0;
+
+  RMI1 = (int***)malloc(sizeof(int**)*(Matomnum+1));
+  RMI2 = (int***)malloc(sizeof(int**)*(Matomnum+1));
+  for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
+    if (Mc_AN==0) Gc_AN = 0;
+    else          Gc_AN = M2G[Mc_AN];
+    RMI1[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
+    RMI2[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
+    for (i=0; i<=FNAN[Gc_AN]; i++){
+      RMI1[Mc_AN][i] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
+      RMI2[Mc_AN][i] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
+      for (j=0; j<=FNAN[Gc_AN]; j++){
+        RMI1[Mc_AN][i][j] = 0;
+        RMI2[Mc_AN][i][j] = 0;
+      }
+    }
+  }
+  alloc_first[6] = 0;
 }
