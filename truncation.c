@@ -326,6 +326,7 @@ double truncation(int MD_iter,int UCell_flag)
       else{
         /* minimal MPI mappings for overlap-only mode */
         Set_Inf_SndRcv_OLP();
+        Set_RMI();
       }
 
   } /* if (MD_iter==1) */ 
@@ -342,6 +343,7 @@ double truncation(int MD_iter,int UCell_flag)
       }
       else{
         Set_Inf_SndRcv_OLP();
+        Set_RMI();
       }
   }
 
@@ -11391,21 +11393,4 @@ void Set_Inf_SndRcv_OLP()
   }
   alloc_first[13] = 0;
 
-  RMI1 = (int***)malloc(sizeof(int**)*(Matomnum+1));
-  RMI2 = (int***)malloc(sizeof(int**)*(Matomnum+1));
-  for (Mc_AN=0; Mc_AN<=Matomnum; Mc_AN++){
-    if (Mc_AN==0) Gc_AN = 0;
-    else          Gc_AN = M2G[Mc_AN];
-    RMI1[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
-    RMI2[Mc_AN] = (int**)malloc(sizeof(int*)*(FNAN[Gc_AN]+1));
-    for (i=0; i<=FNAN[Gc_AN]; i++){
-      RMI1[Mc_AN][i] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
-      RMI2[Mc_AN][i] = (int*)malloc(sizeof(int)*(FNAN[Gc_AN]+1));
-      for (j=0; j<=FNAN[Gc_AN]; j++){
-        RMI1[Mc_AN][i][j] = 0;
-        RMI2[Mc_AN][i][j] = 0;
-      }
-    }
-  }
-  alloc_first[6] = 0;
 }

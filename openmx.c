@@ -77,7 +77,7 @@ void Dump_OverlapOnly_SCFOUT(const char *fname,
                              double ****RX_arr,
                              double ****RY_arr,
                              double ****RZ_arr);
-#endif
+#endif  /* OLPR_DUMP */
 
 int main(int argc, char *argv[]) 
 { 
