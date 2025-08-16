@@ -646,15 +646,15 @@ int main(int argc, char *argv[])
   do {
 
     /* for DFT-D2 by okuno and DFT-D3 by Ellner, and modified by Ozaki */
-    if (dftD_switch==1 && version_dftD==2) DFTDvdW_init(MD_iter);   /* DFT-D2 */
-    if (dftD_switch==1 && version_dftD==3) DFTD3vdW_init(MD_iter);  /* DFT-D3 */
+    // if (dftD_switch==1 && version_dftD==2) DFTDvdW_init(MD_iter);   /* DFT-D2 */
+    // if (dftD_switch==1 && version_dftD==3) DFTD3vdW_init(MD_iter);  /* DFT-D3 */
 
-    if (MD_switch==12)
-      CompTime[myid][2] += truncation(1,1);  /* EvsLC */
-    else if (MD_cellopt_flag==1)
-      CompTime[myid][2] += truncation(1,1);  /* cell optimization */
-    else 
-      CompTime[myid][2] += truncation(MD_iter,1);
+    // if (MD_switch==12)
+    //   CompTime[myid][2] += truncation(1,1);  /* EvsLC */
+    // else if (MD_cellopt_flag==1)
+    //   CompTime[myid][2] += truncation(1,1);  /* cell optimization */
+    // else 
+    CompTime[myid][2] += truncation(MD_iter,1);
 
     #ifdef OLPR_DUMP
       if (MD_iter==1) {
