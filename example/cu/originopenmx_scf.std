@@ -1,0 +1,266 @@
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+
+The number of threads in each node for OpenMP parallelization is 1.
+
+
+*******************************************************
+*******************************************************
+ Welcome to OpenMX   Ver. 3.9.9                           
+ Copyright (C), 2002-2019, T. Ozaki                    
+ OpenMX comes with ABSOLUTELY NO WARRANTY.             
+ This is free software, and you are welcome to         
+ redistribute it under the constitution of the GNU-GPL.
+*******************************************************
+*******************************************************
+
+When only the gamma point is considered, the eigenvalue solver is changed to 'Cluster' with the periodic boundary condition.
+Automatic determination of Kerker_factor:   0.313860488257
+
+
+<Input_std>  Your input file was normally read.
+<Input_std>  The system includes 1 species and 1 atoms.
+
+*******************************************************
+                     PAO and VPS                       
+*******************************************************
+
+<SetPara_DFT>  PAOs of species Cu were normally found.
+<SetPara_DFT>  VPSs of species Cu were normally found.
+               Cu_PBE19S.vps is j-dependent.
+               In case of scf.SpinOrbit.Coupling=off,
+               j-dependent pseudo potentials are averaged by j-degeneracy,
+               which corresponds to a scalar relativistic treatment.
+
+*******************************************************
+     Fourier transform of PAO and projectors of VNL    
+*******************************************************
+
+<FT_PAO>          Fourier transform of pseudo atomic orbitals
+<FT_NLP>          Fourier transform of non-local projectors
+<FT_ProExpn_VNA>  Fourier transform of VNA separable projectors
+<FT_VNA>          Fourier transform of VNA potentials
+<FT_ProductPAO>   Fourier transform of product of PAOs
+
+*******************************************************
+  Allocation of atoms to processors at MD_iter=    1     
+*******************************************************
+
+ proc =   0  # of atoms=   1  estimated weight=         1.00000
+ proc =   1  # of atoms=   0  estimated weight=         0.00000
+
+
+
+
+*******************************************************
+        Analysis of neighbors and setting of grids        
+*******************************************************
+
+TFNAN=      26   Average FNAN=  26.00000
+TSNAN=       0   Average SNAN=   0.00000
+<truncation> CpyCell= 1 ct_AN=   1 FNAN SNAN  26   0
+TFNAN=      80   Average FNAN=  80.00000
+TSNAN=       0   Average SNAN=   0.00000
+<truncation> CpyCell= 2 ct_AN=   1 FNAN SNAN  80   0
+TFNAN=      86   Average FNAN=  86.00000
+TSNAN=       0   Average SNAN=   0.00000
+<truncation> CpyCell= 3 ct_AN=   1 FNAN SNAN  86   0
+TFNAN=      86   Average FNAN=  86.00000
+TSNAN=       0   Average SNAN=   0.00000
+<truncation> CpyCell= 4 ct_AN=   1 FNAN SNAN  86   0
+TFNAN=      86   Average FNAN=  86.00000
+TSNAN=       0   Average SNAN=   0.00000
+<truncation> CpyCell= 4 ct_AN=   1 FNAN SNAN  86   0
+<Check_System> The system is bulk.
+lattice vectors (bohr)
+A  =  0.000000000000,  3.415679724356,  3.415679724356
+B  =  3.415679724356,  0.000000000000,  3.415679724356
+C  =  3.415679724356,  3.415679724356,  0.000000000000
+reciprocal lattice vectors (bohr^-1)
+RA = -0.919756214609,  0.919756214609,  0.919756214609
+RB =  0.919756214609, -0.919756214609,  0.919756214609
+RC =  0.919756214609,  0.919756214609, -0.919756214609
+Grid_Origin  0.000000000000  0.000000000000  0.000000000000
+Cell_Volume =     79.700568807819 (Bohr^3)
+GridVol     =      0.008606043495 (Bohr^3)
+Grid_Origin  0.000000000000  0.000000000000  0.000000000000
+Cell_Volume =     79.700568807819 (Bohr^3)
+GridVol     =      0.008606043495 (Bohr^3)
+<UCell_Box> Info. of cutoff energy and num. of grids
+lattice vectors (bohr)
+A  =  0.000000000000,  3.415679724356,  3.415679724356
+B  =  3.415679724356,  0.000000000000,  3.415679724356
+C  =  3.415679724356,  3.415679724356,  0.000000000000
+reciprocal lattice vectors (bohr^-1)
+RA = -0.919756214609,  0.919756214609,  0.919756214609
+RB =  0.919756214609, -0.919756214609,  0.919756214609
+RC =  0.919756214609,  0.919756214609, -0.919756214609
+Required cutoff energy (Ryd) for 3D-grids = 300.0000
+    Used cutoff energy (Ryd) for 3D-grids = 279.7985, 279.7985, 279.7985
+Num. of grids of a-, b-, and c-axes = 21, 21, 21
+Grid_Origin  0.000000000000  0.000000000000  0.000000000000
+Cell_Volume =     79.700568807819 (Bohr^3)
+GridVol     =      0.008606043495 (Bohr^3)
+Cell vectors (bohr) of the grid cell (gtv)
+  gtv_a =  0.000000000000,  0.162651415446,  0.162651415446
+  gtv_b =  0.162651415446,  0.000000000000,  0.162651415446
+  gtv_c =  0.162651415446,  0.162651415446,  0.000000000000
+  |gtv_a| =  0.230023837662
+  |gtv_b| =  0.230023837662
+  |gtv_c| =  0.230023837662
+Num. of grids overlapping with atom    1 = 104925
+
+*******************************************************
+             SCF calculation at MD = 1                
+*******************************************************
+
+<MD= 1>  Calculation of the overlap matrix
+<MD= 1>  Calculation of the nonlocal matrix
+<MD= 1>  Calculation of the VNA projector matrix
+
+******************* MD= 1  SCF= 1 *******************
+<Cluster>  Solving the eigenvalue problem...
+    1   Cu  MulP   5.5000  5.5000 sum  11.0000
+ Sum of MulP: up   =     5.50000 down          =     5.50000
+              total=    11.00000 ideal(neutral)=    11.00000
+<DFT>  Total Spin Moment (muB) =  0.000000000000
+<DFT>  Mixing_weight= 0.020000000000
+<DFT>  Uele   =   -4.121834926463  dUele     =   1.000000000000
+<DFT>  NormRD =    1.000000000000  Criterion =   0.000000010000
+<MD= 1>  Force calculation
+  Force calculation #1
+  Force calculation #2
+  Force calculation #3
+  Force calculation #4
+  Force calculation #5
+<MD= 1>  Total Energy
+  Force calculation #6
+  Force calculation #7
+
+*******************************************************
+                  Dipole moment (Debye)                 
+*******************************************************
+
+ Absolute D      148.06504066
+
+                      Dx                Dy                Dz
+ Total            -85.48539108      -85.48539108      -85.48539108
+ Core               0.00000000        0.00000000        0.00000000
+ Electron         -85.48539108      -85.48539108      -85.48539108
+ Back ground       -0.00000000       -0.00000000       -0.00000000
+
+*******************************************************
+                Total Energy (Hartree) at MD = 1        
+*******************************************************
+
+  Uele  =      -4.121834926463
+
+  Ukin  =      63.949954572927
+  UH0   =    -673.848952969014
+  UH1   =       0.000000000000
+  Una   =     -25.367570071851
+  Unl   =     -31.018351668044
+  Uxc0  =      -8.597054531236
+  Uxc1  =      -8.597054531236
+  Ucore =     627.458502207741
+  Uhub  =       0.000000000000
+  Ucs   =       0.000000000000
+  Uzs   =       0.000000000000
+  Uzo   =       0.000000000000
+  Uef   =       0.000000000000
+  UvdW  =       0.000000000000
+  Uch   =       0.000000000000
+  Utot  =     -56.020526990714
+
+  UpV   =       0.000000000000
+  Enpy  =     -56.020526990714
+  Note:
+
+  Uele:   band energy
+  Ukin:   kinetic energy
+  UH0:    electric part of screened Coulomb energy
+  UH1:    difference electron-electron Coulomb energy
+  Una:    neutral atom potential energy
+  Unl:    non-local potential energy
+  Uxc0:   exchange-correlation energy for alpha spin
+  Uxc1:   exchange-correlation energy for beta spin
+  Ucore:  core-core Coulomb energy
+  Uhub:   LDA+U energy
+  Ucs:    constraint energy for spin orientation
+  Uzs:    Zeeman term for spin magnetic moment
+  Uzo:    Zeeman term for orbital magnetic moment
+  Uef:    electric energy by electric field
+  UvdW:   semi-empirical vdW energy 
+  Uch:    penalty term to create a core hole
+  UpV:    pressure times volume
+  Enpy:   Enthalpy = Utot + UpV
+  (see also PRB 72, 045121(2005) for the energy contributions)
+
+
+*******************************************************
+           Computational times (s) at MD = 1            
+*******************************************************
+
+  DFT in total      =    3.71093
+
+  Set_OLP_Kin       =    0.49636
+  Set_Nonlocal      =    0.85844
+  Set_ProExpn_VNA   =    1.03124
+  Set_Hamiltonian   =    0.12199
+  Poisson           =    0.00000
+  diagonalization   =    0.00928
+  Mixing_DM         =    0.00122
+  Force             =    0.68973
+  Total_Energy      =    0.37423
+  Set_Aden_Grid     =    0.00853
+  Set_Orbitals_Grid =    0.01356
+  Set_Density_Grid  =    0.06960
+  RestartFileDFT    =    0.00432
+  Mulliken_Charge   =    0.00048
+  FFT(2D)_Density   =    0.02277
+
+The SCF was not fully achieved at MD=   1
+
+*******************************************************
+             MD or geometry opt. at MD = 1              
+*******************************************************
+
+
+outputting data on grids to files...
+
+Save the scfout file (.//openmx.scfout)
+
+***********************************************************
+***********************************************************
+               Computational Time (second)                 
+***********************************************************
+***********************************************************
+
+                               Min_ID   Min_Time       Max_ID   Max_Time
+   Total Computational Time =     1        5.580          0        5.801
+   readfile                 =     1        1.094          0        1.094
+   truncation               =     1        0.391          0        0.403
+   MD_pac                   =     0        0.025          1        0.032
+   OutData                  =     1        0.122          0        0.150
+   DFT                      =     0        3.711          1        3.722
+
+*** In DFT ***
+
+   Set_OLP_Kin              =     1        0.045          0        0.496
+   Set_Nonlocal             =     0        0.858          1        1.310
+   Set_ProExpn_VNA          =     1        0.572          0        1.031
+   Set_Hamiltonian          =     1        0.122          0        0.122
+   Poisson                  =     0        0.000          0        0.000
+   Diagonalization          =     1        0.009          0        0.009
+   Mixing_DM                =     1        0.001          0        0.001
+   Force                    =     1        0.690          0        0.690
+   Total_Energy             =     1        0.372          0        0.374
+   Set_Aden_Grid            =     0        0.009          1        0.467
+   Set_Orbitals_Grid        =     1        0.000          0        0.014
+   Set_Density_Grid         =     1        0.070          0        0.070
+   RestartFileDFT           =     1        0.003          0        0.004
+   Mulliken_Charge          =     0        0.000          1        0.000
+   FFT(2D)_Density          =     0        0.023          1        0.023
+   Others                   =     0        0.009          1        0.036
+
+The calculation was normally finished.
