@@ -100,7 +100,7 @@ function print_like_openmx(data; printS=false, printRx=false, printRy=false, pri
                 rn_idx, (ri,rj,rk) = rn_index_and_triplet(atv_ijk, ncn[i][h])
                 # local index 从 0 开始更贴近 OpenMX 输出
                 @printf("global index=%d  local index=%d (global=%d, Rn=%d)\n",
-                        B, h-1, i, rn_idx)
+                        i, h-1, B, rn_idx)
                 M = OLP[i][h]
                 for r in 1:size(M,1); print_row(M[r, :]); end
             end
@@ -116,7 +116,7 @@ function print_like_openmx(data; printS=false, printRx=false, printRy=false, pri
                 rn_idx, (ri,rj,rk) = rn_index_and_triplet(atv_ijk, ncn[i][h])
                 # 有些 OpenMX 变体会把 Rn 打成四元（0 i j k），这里两种都给：先三元，再整数
                 @printf("global index=%d  local index=%d (global=%d, Rn=%d %d %d %d)\n",
-                        B, h-1, i, rn_idx, ri, rj, rk)
+                        i, h-1, B, rn_idx, ri, rj, rk)
                 M = OLP_r[dir][i][h]
                 for r in 1:size(M,1); print_row(M[r, :]); end
             end
