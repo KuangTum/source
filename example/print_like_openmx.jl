@@ -49,7 +49,8 @@ function read_olpr(filepath::String)
         OLP_r = ntuple(_->([Vector{Matrix{Float64}}(undef, FNAN[i]+1) for i in 1:atomnum]), 3)
         for α in 1:3, i in 1:atomnum, h in 1:(FNAN[i]+1)
             B = natn[i][h]
-            OLP_r[α][i][h] = read_block_f64(io, TNO[B], TNO[i])
+            M = read_block_f64(io, TNO[i], TNO[B])  # centre×neighbour
+            OLP_r[α][i][h] = M'                     # transpose to neighbour×centre
         end
 
         return (; atomnum, spinP_switch, Catomnum, Latomnum, Ratomnum,
@@ -99,7 +100,7 @@ function print_like_openmx(data; printS=false, printRx=false, printRy=false, pri
                 rn_idx, (ri,rj,rk) = rn_index_and_triplet(atv_ijk, ncn[i][h])
                 # local index 从 0 开始更贴近 OpenMX 输出
                 @printf("global index=%d  local index=%d (global=%d, Rn=%d)\n",
-                        i, h-1, i, rn_idx)
+                        B, h-1, i, rn_idx)
                 M = OLP[i][h]
                 for r in 1:size(M,1); print_row(M[r, :]); end
             end
@@ -115,7 +116,7 @@ function print_like_openmx(data; printS=false, printRx=false, printRy=false, pri
                 rn_idx, (ri,rj,rk) = rn_index_and_triplet(atv_ijk, ncn[i][h])
                 # 有些 OpenMX 变体会把 Rn 打成四元（0 i j k），这里两种都给：先三元，再整数
                 @printf("global index=%d  local index=%d (global=%d, Rn=%d %d %d %d)\n",
-                        i, h-1, i, rn_idx, ri, rj, rk)
+                        B, h-1, i, rn_idx, ri, rj, rk)
                 M = OLP_r[dir][i][h]
                 for r in 1:size(M,1); print_row(M[r, :]); end
             end
