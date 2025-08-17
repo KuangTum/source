@@ -114,5 +114,5 @@ Num. of grids overlapping with atom    1 = 104925
  Broadcast S matrix elements.
  Broadcast Position matrix elements.
 [OverlapOnlyDump] wrote openmx_olpr.scfout (S and r_x/y/z only)
-[OLPR] dump done, exiting
 [OverlapOnlyDump] wrote openmx_olpr.scfout (S and r_x/y/z only)
+[OLPR] dump done, exiting
