@@ -46,7 +46,7 @@ static void write_3d_vecs_int(FILE *fp, int num, int **vec) {
  * 而 HopTB 的 t[jj,ii] 期望 (行=邻居轨道, 列=中心轨道)，等价于做一次转置：
  *   t(jj,ii) = OLP[ct][h][ii][jj]
  */
-/* 写 4* 指针的一个块（用于 r 矩阵） */
+/* 写 4* 指针的一个块（用于 S 或不带自旋维度的矩阵） */
 static void dump_block_matrix4(FILE *fp,
                                int tno_center, int tno_neigh,
                                double ****M, int ct_AN, int h_AN)
@@ -54,19 +54,6 @@ static void dump_block_matrix4(FILE *fp,
   for (int ii=0; ii<tno_center; ++ii) {       /* 列：中心原子轨道 */
     for (int jj=0; jj<tno_neigh;  ++jj) {     /* 行：邻居原子轨道 */
       double v = M[ct_AN][h_AN][ii][jj];      /* 如需转置，这里改成 [jj][ii] */
-      fwrite(&v, sizeof(double), 1, fp);
-    }
-  }
-}
-
-/* 写 5* 指针的一个块（用于 S，带自旋通道） */
-static void dump_block_matrix5(FILE *fp,
-                               int tno_center, int tno_neigh,
-                               double *****M, int spin, int ct_AN, int h_AN)
-{
-  for (int ii=0; ii<tno_center; ++ii) {       /* 列：中心原子轨道 */
-    for (int jj=0; jj<tno_neigh;  ++jj) {     /* 行：邻居原子轨道 */
-      double v = M[spin][ct_AN][h_AN][ii][jj];
       fwrite(&v, sizeof(double), 1, fp);
     }
   }
@@ -98,7 +85,7 @@ static void calc_numorb_base(int atomnum, int *Total_NumOrbs, int *base)
 /* ====== 导出最小 .scfout：头/平移/邻接/tv-rtv-Gxyz/OLP/OLP_r ====== */
 void Dump_OverlapOnly_SCFOUT(const char *fname,
                              /* 输入：OLP 与位置重叠的三个方向 */
-                             double *****OLP_arr,
+                             double ****OLP_arr,
                              double ****RX_arr,
                              double ****RY_arr,
                              double ****RZ_arr)
@@ -211,6 +198,7 @@ fwrite(hdr, sizeof(int), 7, fp);
   }
 
   /* ---------- 5) OLP：支持 0/1/NC 自旋 ---------- */
+  /* OLP_arr 不含自旋维度，因此每个自旋通道复用同一块数据 */
   for (int spin=0; spin<=SpinP_switch; ++spin) {
     for (int i=1;i<=atomnum;++i) {
       int len = FNAN[i] + 1;                    /* 含 self */
@@ -218,7 +206,7 @@ fwrite(hdr, sizeof(int), 7, fp);
         int B = natn[i][h];
         int tno_center = TNO[i];
         int tno_neigh  = TNO[B];
-        dump_block_matrix5(fp, tno_center, tno_neigh, OLP_arr, spin, i, h);
+        dump_block_matrix4(fp, tno_center, tno_neigh, OLP_arr, i, h);
       }
     }
   }

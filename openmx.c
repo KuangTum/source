@@ -73,7 +73,7 @@
 
 #ifdef OLPR_DUMP
 void Dump_OverlapOnly_SCFOUT(const char *fname,
-                             double *****OLP_arr, /* ←注意五个* */
+                             double ****OLP_arr,
                              double ****RX_arr,
                              double ****RY_arr,
                              double ****RZ_arr);
@@ -662,6 +662,7 @@ int main(int argc, char *argv[])
 
         /* 1) 生成 S */
         extern double *****OLP;
+        extern double ****OLP_all;
         extern double *****H0;
         Set_OLP_Kin(OLP, H0);
 
@@ -673,7 +674,7 @@ int main(int argc, char *argv[])
 
         /* 3) 只写 S 和 r */
         Dump_OverlapOnly_SCFOUT("openmx_olpr.scfout",
-                                OLP,
+                                OLP_all,
                                 OLPpox_all,
                                 OLPpoy_all,
                                 OLPpoz_all);
